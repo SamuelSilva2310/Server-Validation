@@ -4,10 +4,10 @@ OPERATING_SYSTEMS = [{"name": "Ubuntu", "versions": ["18","20","17"]}, {"name": 
 NECESSARY_PACKAGES = ['python','sudo','rsync','ntpdate','openssh-server','debootstrap']
 NICE_PACKAGES = ['tcpflow','tcpdump','nmap','netstat','htop']
 REPOS = [{"url": "ftp.debian.org", "port": "80"}, 
-        {"url": "httpredir.debian.org", "port": "80"},
-        {"url": "security.debian.org", "port": "80"},
-        {"url": "archive.debian.org", "port": "80"},
-        {"url": "deb.debian.org", "port": "80"},
-        {"url": "keyserver.ubuntu.com", "port": "80"},
+        {"url": "httpredir.debian.org", "port": "2500"},
         {"url": "ftp-master.debian.org", "port": "80"}]
 
+SERVERS = [{
+        "user": "root", 
+        "key":"/root/.ssh/id_rsa", 
+        "ip": ["104.248.203.245", "axess311.axiros.kjoo.net","axess5.axiros.kjoo.net"]}]
