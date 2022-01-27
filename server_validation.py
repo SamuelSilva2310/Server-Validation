@@ -59,7 +59,7 @@ def validate_packages(packages):
         retval = subprocess.call(["dpkg","-s",package],stdout=devnull,stderr=subprocess.STDOUT)
         devnull.close()
         
-        passed = retval != 0        
+        passed = retval == 0        
         results.append(new_test(passed,package))
     
     return results
@@ -73,12 +73,24 @@ def validate_user(user):
     Returns:
         bool: bool describing if the user exists or not
     """
-    try:
-        if pwd.getpwnam(user):
-            return True
-    except KeyError:
-        return False
+    results = []
+    filename = f"/etc/sudoers.d/{user}"
+    # filename = f"{user}.txt"
+    if os.path.exists(filename):
+
+        passed_file_exists = True
+        with open(filename,"r") as f:
+            content = f.read()
+            wanted_content = f"{user} ALL=(ALL) NOPASSWD:ALL"
+            passed_content = content == wanted_content
+    else:
+        passed_file_exists = False
+        passed_content = False
+
+    results.append(new_test(passed_file_exists, "User File Exists"))
+    results.append(new_test(passed_content, f"Sudoers User File Content ({user} ALL=(ALL) NOPASSWD:ALL)"))
     
+    return results
 
 
 def validate_repos(repos):
@@ -118,6 +130,7 @@ def build_response():
 
     
     # Validade User exists
+    message.add_section("Sudoers User", validate_user(config.USER))
 
 
     # Validate repo apt servers
@@ -136,3 +149,4 @@ def build_response():
 # validate_servers(config.SERVERS)
 
 print(build_response())
+
