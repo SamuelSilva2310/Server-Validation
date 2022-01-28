@@ -17,14 +17,12 @@ def new_test(passed, message):
 
 
 def validate_system_os(operating_systems):
-    """Receives a list of supported operating systems 
+    """
+    Receives a list of supported operating systems 
     and checks if the current os is suported
 
     Args:
-        operating_systems (list): list of Dicts {} containing information about each os
-
-    Returns:
-        bool: Boolean based on if our os is supported
+        operating_systems (list): list of Dicts {} containing information about each OS
     """
     id = distro.id()
     version = distro.version()
@@ -47,6 +45,9 @@ def validate_packages(packages):
     """
     Receives a list of packages and 
     check if each one is either installed or not
+
+    Args:
+        packages (list): list of packages
     """
 
     results = []
@@ -65,13 +66,11 @@ def validate_packages(packages):
 
 
 def validate_user(user):
-    """Validates if user exists in system
+    """
+    Validates if user exists in system
 
     Args:
         user (str): username
-
-    Returns:
-        bool: bool describing if the user exists or not
     """
     results = []
 
@@ -103,10 +102,11 @@ def validate_user(user):
 
 
 def validate_repos(repos):
-    """Checks connection to each server
+    """
+    Checks connection to each server
 
     Args:
-        servers ([type]): [description]
+        servers (list): list of Dicts {} containing information about each apt repo
     """
     results = []
     nmScan = nmap.PortScanner()
@@ -120,10 +120,11 @@ def validate_repos(repos):
 
 
 def validate_shh_connections(servers):
-    """Validates acess to servers using ssh
+    """
+    Validates acess to servers using ssh
 
     Args:
-        servers (dict): [description]
+        servers (list): list of Dicts{} containing information about servers ('username','ssh_key','ip1,ip2,ip3...')
     """
 
     ssh = SSHClient()
@@ -158,8 +159,6 @@ def build_response():
     message.add_section("Operating System",
                         validate_system_os(config.OPERATING_SYSTEMS))
 
-    # Validade Packages
-
     # Necessary Packages
     message.add_section("Necessary packages",
                         validate_packages(config.NECESSARY_PACKAGES))
@@ -171,10 +170,8 @@ def build_response():
     message.add_section("Sudoers User", validate_user(config.USER))
 
     # Validate repo apt servers
-   # message.add_section("Connection to Repos", validate_repos(config.REPOS))
+    message.add_section("Connection to Repos", validate_repos(config.REPOS))
 
     return message.get_content()
 
-
-# validate_shh_connections(config.SERVERS)
 print(build_response())
